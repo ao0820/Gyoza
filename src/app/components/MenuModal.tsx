@@ -1,17 +1,9 @@
 import { X } from "lucide-react";
 import Image from "next/image";
-
-export interface ShopData {
-    id: string;
-    title: string;
-    image: string;
-    desc: string;
-    allergy: string;
-    tag: string;
-}
+import { Shop } from "../types";
 
 interface MenuModalProps {
-    shop: ShopData | null;
+    shop: Shop | null;
     onClose: () => void;
 }
 
@@ -33,7 +25,7 @@ export default function MenuModal({ shop, onClose }: MenuModalProps) {
                 <div className="relative h-64">
                     <Image
                         src={shop.image}
-                        alt={shop.title}
+                        alt={shop.name}
                         fill
                         className="object-cover"
                     />
@@ -46,16 +38,16 @@ export default function MenuModal({ shop, onClose }: MenuModalProps) {
                 </div>
 
                 <div className="p-8">
-                    <h3 className="text-3xl font-black text-brand-red mb-4">{shop.title}</h3>
+                    <h3 className="text-3xl font-black text-brand-red mb-4">{shop.name}</h3>
 
                     <div className="mb-6">
                         <h4 className="text-sm font-bold text-gray-400 mb-2">こだわりポイント</h4>
-                        <p className="text-gray-700 leading-relaxed text-lg">{shop.desc}</p>
+                        <p className="text-gray-700 leading-relaxed text-lg">{shop.description}</p>
                     </div>
 
                     <div className="bg-orange-50 p-4 rounded-xl border border-brand-orange/20">
                         <h4 className="text-sm font-bold text-brand-orange mb-1">特定原材料（アレルギー表示）</h4>
-                        <p className="text-sm text-gray-600 font-medium">{shop.allergy}</p>
+                        <p className="text-sm text-gray-600 font-medium">{shop.allergy || "なし"}</p>
                     </div>
                 </div>
             </div>

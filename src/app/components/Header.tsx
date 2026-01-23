@@ -44,11 +44,11 @@ export default function Header() {
                 <nav className="hidden md:flex gap-8 font-bold text-sm items-center">
                     {[
                         { name: "TOP", path: "/" },
-                        { name: "NEWS", path: "#news" },
-                        { name: "TICKET", path: "#ticket" },
-                        { name: "HOW TO", path: "#guide" },
-                        { name: "MENU", path: "#menu" },
-                        { name: "ACCESS", path: "#access" },
+                        { name: "NEWS", path: "/#news" },
+                        { name: "TICKET", path: "/#ticket" },
+                        { name: "HOW TO", path: "/#guide" },
+                        { name: "MENU", path: "/#menu" },
+                        { name: "ACCESS", path: "/#access" },
                     ].map((item) => (
                         <Link
                             key={item.path}

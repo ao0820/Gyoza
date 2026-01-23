@@ -13,6 +13,8 @@ export const metadata: Metadata = {
   description: "心も体も熱くなる、最強の5日間。全国から選りすぐりの餃子が集結する、日本最大級の餃子の祭典。",
 };
 
+import { CartProvider } from "@/context/CartContext";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -21,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`${notoSansJP.variable} font-sans bg-washi text-sumi antialiased`}>
-        {children}
+        <CartProvider>
+          {children}
+        </CartProvider>
       </body>
     </html>
   );

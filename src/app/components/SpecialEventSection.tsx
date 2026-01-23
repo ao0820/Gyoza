@@ -29,7 +29,7 @@ export default function SpecialEventSection() {
                             <div className="aspect-video relative overflow-hidden">
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
                                 <Image
-                                    src="/img/gyoza.png"
+                                    src="/img/gyoza_event1.png"
                                     alt="Special Live"
                                     fill
                                     className="object-cover group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0"
@@ -56,7 +56,7 @@ export default function SpecialEventSection() {
                             <div className="aspect-video relative overflow-hidden">
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
                                 <Image
-                                    src="/img/gyoza.png"
+                                    src="/img/gyoza_event2.png"
                                     alt="Talk Show"
                                     fill
                                     className="object-cover group-hover:scale-110 transition-transform duration-700 grayscale group-hover:grayscale-0"

@@ -54,9 +54,17 @@ export default function TicketSection() {
                     ))}
                 </div>
 
-                <div className="text-center mt-12 text-gray-500 text-sm font-bold">
-                    ※ 全ての電子マネーがご利用いただけます。<br />
-                    ※ 会場内での食券販売もございます。
+                <div className="text-center mt-12 space-y-4">
+                    <p className="text-gray-500 text-sm font-bold">
+                        ※ 全ての電子マネーがご利用いただけます。<br />
+                        ※ 会場内での食券販売もございます。
+                    </p>
+                    <a
+                        href="/reserve"
+                        className="inline-block bg-brand-red text-white text-xl font-black px-12 py-4 rounded-full shadow-lg hover:bg-red-600 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                    >
+                        予約・チケット事前購入はこちら
+                    </a>
                 </div>
             </div>
         </section>
