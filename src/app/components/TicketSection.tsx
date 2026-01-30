@@ -4,23 +4,23 @@ import ScrollReveal from "./ScrollReveal";
 export default function TicketSection() {
     const tickets = [
         {
-            price: "¥700",
-            label: "食券5枚セット",
+            price: "¥500",
+            label: "食券1枚",
             desc: "まずはこれ！",
             color: "bg-brand-red",
             subColor: "bg-white/20"
         },
         {
-            price: "¥2,800",
-            label: "食券20枚セット",
+            price: "¥2,500",
+            label: "食券5枚セット",
             desc: "グループにおすすめ",
             color: "bg-brand-orange",
             subColor: "bg-white/20"
         },
         {
-            price: "+¥500",
-            label: "ファストパス",
-            desc: "並ばずに食べられる",
+            price: "¥5,000",
+            label: "食券10枚セット",
+            desc: "たっぷり楽しめる",
             color: "bg-brand-yellow",
             subColor: "bg-black/10",
             textColor: "text-sumi"
@@ -59,12 +59,20 @@ export default function TicketSection() {
                         ※ 全ての電子マネーがご利用いただけます。<br />
                         ※ 会場内での食券販売もございます。
                     </p>
-                    <a
-                        href="/reserve"
-                        className="inline-block bg-brand-red text-white text-xl font-black px-12 py-4 rounded-full shadow-lg hover:bg-red-600 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-                    >
-                        予約・チケット事前購入はこちら
-                    </a>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a
+                            href="/tickets"
+                            className="inline-block bg-brand-red text-white text-xl font-black px-12 py-4 rounded-full shadow-lg hover:bg-red-600 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        >
+                            食券購入について
+                        </a>
+                        <a
+                            href="/reserve"
+                            className="inline-block bg-white text-brand-red border-2 border-brand-red text-xl font-black px-12 py-4 rounded-full shadow-lg hover:bg-brand-red hover:text-white hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                        >
+                            事前予約はこちら
+                        </a>
+                    </div>
                 </div>
             </div>
         </section>

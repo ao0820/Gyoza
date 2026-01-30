@@ -1,10 +1,9 @@
 "use client";
 
 import { useCart } from "../../context/CartContext";
-import { X, Trash2, Send } from "lucide-react";
+import { X, Trash2, ArrowRight } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import { sendOrderToGAS } from "../../lib/gas";
+import { useRouter } from "next/navigation";
 
 interface CartModalProps {
     isOpen: boolean;
@@ -12,48 +11,16 @@ interface CartModalProps {
 }
 
 export default function CartModal({ isOpen, onClose }: CartModalProps) {
-    const { cart, removeFromCart, updateQuantity, totalPrice, clearCart } = useCart();
-    const [isOrdering, setIsOrdering] = useState(false);
-    const [orderComplete, setOrderComplete] = useState(false);
+    const { cart, removeFromCart, updateQuantity, totalPrice } = useCart();
+    const router = useRouter();
 
     if (!isOpen) return null;
 
-    const handleOrder = async () => {
+    const handleProceedToConfirm = () => {
         if (cart.length === 0) return;
-
-        setIsOrdering(true);
-        try {
-            await sendOrderToGAS(cart, totalPrice);
-            setOrderComplete(true);
-            clearCart();
-        } catch (error) {
-            alert("注文の送信に失敗しました。もう一度お試しください。");
-            console.error(error);
-        } finally {
-            setIsOrdering(false);
-        }
+        router.push("/reserve/confirm");
+        onClose();
     };
-
-    if (orderComplete) {
-        return (
-            <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-                <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose} />
-                <div className="relative bg-white w-full max-w-md rounded-3xl p-8 text-center z-10 shadow-2xl">
-                    <div className="w-20 h-20 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Send size={40} />
-                    </div>
-                    <h3 className="text-2xl font-black text-sumi mb-4">注文完了！</h3>
-                    <p className="text-gray-500 mb-8">ご注文ありがとうございます。<br />スタッフが席までお持ちします。</p>
-                    <button
-                        onClick={() => { setOrderComplete(false); onClose(); }}
-                        className="bg-brand-red text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-600 transition-colors"
-                    >
-                        閉じる
-                    </button>
-                </div>
-            </div>
-        );
-    }
 
     return (
         <div className="fixed inset-0 z-[60] flex justify-end">
@@ -126,24 +93,11 @@ export default function CartModal({ isOpen, onClose }: CartModalProps) {
                             <span className="text-brand-red">¥{totalPrice.toLocaleString()}</span>
                         </div>
                         <button
-                            onClick={handleOrder}
-                            disabled={isOrdering}
-                            className={`w-full py-4 rounded-xl font-black text-white text-lg shadow-lg flex items-center justify-center gap-2 transition-all ${isOrdering
-                                    ? "bg-gray-400 cursor-not-allowed"
-                                    : "bg-brand-red hover:bg-red-600 hover:shadow-brand-red/40 active:scale-95"
-                                }`}
+                            onClick={handleProceedToConfirm}
+                            className="w-full py-4 rounded-xl font-black text-white text-lg shadow-lg flex items-center justify-center gap-2 transition-all bg-brand-red hover:bg-red-600 hover:shadow-brand-red/40 active:scale-95"
                         >
-                            {isOrdering ? (
-                                <>
-                                    <div className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full" />
-                                    送信中...
-                                </>
-                            ) : (
-                                <>
-                                    <Send size={20} />
-                                    注文を確定する
-                                </>
-                            )}
+                            <span>注文手続きへ進む</span>
+                            <ArrowRight size={20} />
                         </button>
                     </div>
                 )}

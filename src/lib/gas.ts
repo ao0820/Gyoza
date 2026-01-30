@@ -1,9 +1,9 @@
 import { CartItem } from "../app/types";
 
 export const sendOrderToGAS = async (items: CartItem[], totalPrice: number) => {
-    const gasUrl = process.env.NEXT_PUBLIC_GAS_URL;
+    const gasUrl = process.env.NEXT_PUBLIC_GAS_URL_ORDER;
     if (!gasUrl) {
-        throw new Error("GAS URL is not defined");
+        throw new Error("注文用のGAS URLが設定されていません");
     }
 
     try {

@@ -58,6 +58,9 @@ export default function Header() {
                             {item.name}
                         </Link>
                     ))}
+                    <Link href="/tickets" className="bg-brand-red text-white px-6 py-2 rounded-full font-black shadow-lg hover:bg-red-700 transition-all border-2 border-white">
+                        食券購入
+                    </Link>
                     <Link href="/menu" className="bg-brand-yellow text-brand-black px-6 py-2 rounded-full font-black shadow-lg hover:bg-white hover:text-brand-red transition-all">
                         全メニュー
                     </Link>

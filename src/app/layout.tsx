@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 };
 
 import CartWrapper from "./components/CartWrapper";
+import ScrollToTop from "./components/ScrollToTop";
 
 export default function RootLayout({
   children,
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={`${notoSansJP.variable} font-sans bg-washi text-sumi antialiased`}>
+        <ScrollToTop />
         <CartWrapper>
           {children}
         </CartWrapper>

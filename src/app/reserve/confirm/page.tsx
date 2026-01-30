@@ -6,8 +6,10 @@ import Image from "next/image";
 import Header from "@/app/components/Header";
 import Footer from "@/app/components/Footer";
 import ScrollReveal from "@/app/components/ScrollReveal";
+import PaymentSimulator from "@/app/components/PaymentSimulator";
 import { useCart } from "@/context/CartContext";
 import { CartItem } from "@/app/types";
+import { CreditCard, Smartphone } from "lucide-react";
 
 export default function ReserveConfirmPage() {
     const router = useRouter();
@@ -15,8 +17,10 @@ export default function ReserveConfirmPage() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [emailConfirm, setEmailConfirm] = useState("");
+    const [paymentMethod, setPaymentMethod] = useState("");
     const [error, setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [showPayment, setShowPayment] = useState(false);
 
     const formatPrice = (price: number) => {
         return `¥${new Intl.NumberFormat("ja-JP").format(price)}`;
@@ -38,11 +42,21 @@ export default function ReserveConfirmPage() {
         return null;
     }
 
+    const paymentMethods = [
+        { id: "credit", name: "クレジットカード", icon: CreditCard },
+        { id: "paypay", name: "PayPay", icon: Smartphone },
+        { id: "linepay", name: "LINE Pay", icon: Smartphone },
+        { id: "rakuten", name: "楽天Pay", icon: Smartphone },
+        { id: "dpay", name: "d払い", icon: Smartphone },
+        { id: "aupay", name: "au PAY", icon: Smartphone },
+    ];
+
     const validate = () => {
         if (!name) return "お名前を入力してください";
         if (!email) return "メールアドレスを入力してください";
         if (email !== emailConfirm) return "メールアドレスが一致しません";
         if (!email.includes("@")) return "正しいメールアドレスを入力してください";
+        if (!paymentMethod) return "支払い方法を選択してください";
         return "";
     };
 
@@ -55,46 +69,44 @@ export default function ReserveConfirmPage() {
             return;
         }
 
-        setIsSubmitting(true);
         setError("");
+        setShowPayment(true);
+    };
 
+    const handlePaymentComplete = async () => {
         try {
-            const gasUrl = process.env.NEXT_PUBLIC_GAS_URL;
-            if (!gasUrl) {
-                throw new Error("GASのURLが設定されていません。");
+            const gasUrl = process.env.NEXT_PUBLIC_GAS_URL_ORDER;
+            if (gasUrl) {
+                const payload = {
+                    type: "order",
+                    name,
+                    email,
+                    paymentMethod: paymentMethods.find(p => p.id === paymentMethod)?.name,
+                    orders: selectedShops.map((s: CartItem) => ({
+                        id: s.id,
+                        name: s.name,
+                        quantity: s.quantity,
+                        price: s.price,
+                    })),
+                    totalPrice: totalPrice,
+                    timestamp: new Date().toISOString(),
+                };
+
+                await fetch(gasUrl, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(payload),
+                });
             }
-
-            const payload = {
-                name,
-                email,
-                orders: selectedShops.map((s: CartItem) => ({
-                    id: s.id,
-                    name: s.name,
-                    quantity: s.quantity,
-                    price: s.price,
-                })),
-                totalPrice: totalPrice
-            };
-
-            // GASへのPOSTリクエスト
-            await fetch(gasUrl, {
-                method: "POST",
-                mode: "no-cors",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(payload),
-            });
-
-            // 成功したらカートをクリアしてサンクスページへ
-            clearCart();
-            router.push("/reserve/thanks");
-
         } catch (err) {
             console.error("Submission error:", err);
-            setError("通信エラーが発生しました。時間をおいて再度お試しください。");
-            setIsSubmitting(false);
         }
+
+        clearCart();
+        router.push("/reserve/thanks");
     };
 
     return (
@@ -225,6 +237,34 @@ export default function ReserveConfirmPage() {
                             </div>
                         </div>
 
+                        {/* Step 3: 支払い方法選択 */}
+                        <section className="mt-12">
+                            <h3 className="text-xl font-bold text-sumi mb-6 pb-2 border-b-2 border-gray-100">
+                                支払い方法
+                            </h3>
+
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {paymentMethods.map((method) => {
+                                    const Icon = method.icon;
+                                    return (
+                                        <button
+                                            key={method.id}
+                                            type="button"
+                                            onClick={() => setPaymentMethod(method.id)}
+                                            className={`relative p-6 rounded-2xl border-2 transition-all text-center ${paymentMethod === method.id
+                                                    ? "border-brand-red bg-brand-red/5 ring-2 ring-brand-red/20"
+                                                    : "border-gray-200 hover:border-gray-300"
+                                                }`}
+                                        >
+                                            <Icon size={32} className={`mx-auto mb-3 ${paymentMethod === method.id ? "text-brand-red" : "text-gray-400"
+                                                }`} />
+                                            <div className="font-bold text-sumi text-sm">{method.name}</div>
+                                        </button>
+                                    );
+                                })}
+                            </div>
+                        </section>
+
                         <div className="mt-12 text-center">
                             <button
                                 type="submit"
@@ -248,6 +288,15 @@ export default function ReserveConfirmPage() {
                 </div>
             </main>
             <Footer />
+
+            {/* Payment Simulator */}
+            {showPayment && (
+                <PaymentSimulator
+                    paymentMethod={paymentMethods.find(p => p.id === paymentMethod)?.name || ""}
+                    amount={totalPrice}
+                    onComplete={handlePaymentComplete}
+                />
+            )}
         </>
     );
 }
