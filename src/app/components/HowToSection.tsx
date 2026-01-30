@@ -6,7 +6,7 @@ export default function HowToSection() {
         {
             num: "01",
             title: "チケットを購入",
-            desc: "会場入口またはWEBで食券を購入。",
+            desc: "会場入口かWEBで食券を購入。",
             icon: "🎫"
         },
         {
