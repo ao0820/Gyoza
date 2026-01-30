@@ -1,6 +1,7 @@
 
 import ScrollReveal from "./ScrollReveal";
 import Image from "next/image";
+import Link from "next/link";
 
 export default function SpecialEventSection() {
     return (
@@ -25,7 +26,10 @@ export default function SpecialEventSection() {
                 <div className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto">
                     {/* Event 1 */}
                     <ScrollReveal delay={0.1}>
-                        <div className="group relative rounded-3xl overflow-hidden border border-white/10 bg-white/5 hover:bg-white/10 transition-colors">
+                        <Link
+                            href="/events/idol"
+                            className="block group relative rounded-3xl overflow-hidden border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+                        >
                             <div className="aspect-video relative overflow-hidden">
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
                                 <Image
@@ -47,12 +51,15 @@ export default function SpecialEventSection() {
                                     餃子を愛するアイドルユニットが今年も登場！新曲「肉汁スプラッシュ」を初披露。
                                 </p>
                             </div>
-                        </div>
+                        </Link>
                     </ScrollReveal>
 
                     {/* Event 2 */}
                     <ScrollReveal delay={0.2}>
-                        <div className="group relative rounded-3xl overflow-hidden border border-white/10 bg-white/5 hover:bg-white/10 transition-colors">
+                        <Link
+                            href="/events/talk"
+                            className="block group relative rounded-3xl overflow-hidden border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+                        >
                             <div className="aspect-video relative overflow-hidden">
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
                                 <Image
@@ -74,14 +81,17 @@ export default function SpecialEventSection() {
                                     有名グルメブロガーと人気シェフが語る、究極の餃子論。ここだけの裏話も満載！
                                 </p>
                             </div>
-                        </div>
+                        </Link>
                     </ScrollReveal>
                 </div>
 
                 <div className="mt-12 text-center">
-                    <button className="text-white border border-white/30 px-8 py-3 rounded-full hover:bg-white hover:text-brand-black transition-all font-bold tracking-widest text-sm">
+                    <Link
+                        href="/schedule"
+                        className="inline-block text-white border border-white/30 px-8 py-3 rounded-full hover:bg-white hover:text-brand-black transition-all font-bold tracking-widest text-sm"
+                    >
                         イベントスケジュール詳細 →
-                    </button>
+                    </Link>
                 </div>
             </div>
         </section>

@@ -12,12 +12,16 @@ import { Shop, CartItem } from "@/app/types";
 
 export default function ReservePage() {
     const router = useRouter();
-    const { cart, updateQuantity, totalItems, isLoading } = useCart();
+    const { cart, updateQuantity, totalItems, totalPrice, isLoading } = useCart();
 
     const handleSubmit = () => {
         if (totalItems > 0) {
             router.push("/reserve/confirm");
         }
+    };
+
+    const formatPrice = (price: number) => {
+        return `¥${new Intl.NumberFormat("ja-JP").format(price)}`;
     };
 
     return (
@@ -64,9 +68,14 @@ export default function ReservePage() {
                                             )}
                                         </div>
                                         <div className="p-5 flex-1 flex flex-col">
-                                            <h3 className="text-lg font-bold mb-2 leading-tight">
-                                                {shop.name}
-                                            </h3>
+                                            <div className="flex justify-between items-start mb-2">
+                                                <h3 className="text-lg font-bold leading-tight">
+                                                    {shop.name}
+                                                </h3>
+                                                <span className="text-brand-red font-black text-lg">
+                                                    {formatPrice(shop.price)}
+                                                </span>
+                                            </div>
                                             <p className="text-gray-500 text-xs line-clamp-2 mb-4 flex-1">
                                                 {shop.description}
                                             </p>
@@ -108,16 +117,21 @@ export default function ReservePage() {
             {/* Sticky Footer */}
             <div className={`fixed bottom-0 left-0 w-full bg-white shadow-[0_-4px_20px_rgba(0,0,0,0.1)] border-t border-gray-100 p-4 z-40 transition-transform duration-300 ${totalItems > 0 ? "translate-y-0" : "translate-y-full"
                 }`}>
-                <div className="container mx-auto max-w-xl flex flex-col md:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-4">
+                <div className="container mx-auto max-w-4xl flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-6">
                         <div className="bg-brand-black text-white p-3 rounded-full relative">
                             <ShoppingCart size={24} />
                             <span className="absolute -top-1 -right-1 bg-brand-red text-white text-xs font-bold w-5 h-5 rounded-full flex items-center justify-center border-2 border-brand-black">
                                 {totalItems}
                             </span>
                         </div>
-                        <div className="text-lg font-bold text-sumi">
-                            商品を<span className="text-brand-red text-2xl mx-1">{totalItems}</span>点選択中
+                        <div className="flex flex-col md:flex-row md:items-center gap-1 md:gap-6">
+                            <div className="text-sm font-bold text-gray-500">
+                                選択数: <span className="text-brand-black text-xl mx-1">{totalItems}</span>点
+                            </div>
+                            <div className="text-lg font-bold text-sumi">
+                                合計金額: <span className="text-brand-red text-2xl ml-1 font-black">{formatPrice(totalPrice)}</span>
+                            </div>
                         </div>
                     </div>
 
@@ -127,6 +141,7 @@ export default function ReservePage() {
                     >
                         注文手続きへ進む
                     </button>
+
                 </div>
             </div>
 

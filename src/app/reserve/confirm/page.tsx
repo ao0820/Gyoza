@@ -11,12 +11,16 @@ import { CartItem } from "@/app/types";
 
 export default function ReserveConfirmPage() {
     const router = useRouter();
-    const { cart, totalItems, isLoading: isCartLoading, clearCart } = useCart();
+    const { cart, totalItems, totalPrice, isLoading: isCartLoading, clearCart } = useCart();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [emailConfirm, setEmailConfirm] = useState("");
     const [error, setError] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const formatPrice = (price: number) => {
+        return `¥${new Intl.NumberFormat("ja-JP").format(price)}`;
+    };
 
     // Filter selected shops
     const selectedShops = cart;
@@ -66,13 +70,13 @@ export default function ReserveConfirmPage() {
                 orders: selectedShops.map((s: CartItem) => ({
                     id: s.id,
                     name: s.name,
-                    quantity: s.quantity
-                }))
+                    quantity: s.quantity,
+                    price: s.price,
+                })),
+                totalPrice: totalPrice
             };
 
             // GASへのPOSTリクエスト
-            // リダイレクトが発生するため、通常は mode: 'no-cors' を使用することが多いですが、
-            // サーバー側でCORS対応が難しい場合の一般的なGAS呼び出し仕様に合わせています。
             await fetch(gasUrl, {
                 method: "POST",
                 mode: "no-cors",
@@ -82,7 +86,6 @@ export default function ReserveConfirmPage() {
                 body: JSON.stringify(payload),
             });
 
-            // no-cors の場合、レスポンスの内容は読み取れませんが、fetch自体が成功すれば送信されたとみなします
             // 成功したらカートをクリアしてサンクスページへ
             clearCart();
             router.push("/reserve/thanks");
@@ -116,21 +119,41 @@ export default function ReserveConfirmPage() {
                         <div className="space-y-4">
                             {selectedShops.map((shop: CartItem) => (
                                 <div key={shop.id} className="flex gap-4 items-center bg-gray-50 p-4 rounded-xl">
-                                    <div className="relative w-20 h-20 flex-shrink-0 rounded-lg overflow-hidden">
+                                    <div className="relative w-24 h-24 flex-shrink-0 rounded-lg overflow-hidden border border-gray-200">
                                         <Image src={shop.image} alt={shop.name} fill className="object-cover" />
                                     </div>
-                                    <div className="flex-1">
-                                        <h4 className="font-bold text-sumi mb-1">{shop.name}</h4>
-                                        <span className="text-xs bg-brand-yellow px-2 py-0.5 rounded text-brand-black font-bold">
-                                            {shop.tag}
-                                        </span>
+                                    <div className="flex-1 min-w-0">
+                                        <h4 className="font-bold text-sumi mb-1 truncate">{shop.name}</h4>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-xs bg-brand-yellow px-2 py-0.5 rounded text-brand-black font-bold whitespace-nowrap">
+                                                {shop.tag}
+                                            </span>
+                                            <span className="text-sm text-gray-400 font-bold">
+                                                単価: {formatPrice(shop.price)}
+                                            </span>
+                                        </div>
                                     </div>
-                                    <div className="text-xl font-black text-brand-red w-16 text-right">
-                                        x{shop.quantity}
+                                    <div className="text-right">
+                                        <div className="text-sm font-bold text-gray-400">
+                                            x{shop.quantity}
+                                        </div>
+                                        <div className="text-xl font-black text-brand-red">
+                                            {formatPrice(shop.price * shop.quantity)}
+                                        </div>
                                     </div>
                                 </div>
                             ))}
                         </div>
+
+                        {/* Total Price */}
+                        <div className="mt-6 p-6 bg-brand-black rounded-2xl flex items-center justify-between text-white shadow-lg">
+                            <span className="text-lg font-bold">合計金額</span>
+                            <div className="text-right">
+                                <span className="text-sm block opacity-70 mb-1">消費税込</span>
+                                <span className="text-3xl font-black text-brand-yellow">{formatPrice(totalPrice)}</span>
+                            </div>
+                        </div>
+
                         <div className="mt-8 text-right">
                             <button
                                 onClick={() => router.back()}
@@ -141,6 +164,7 @@ export default function ReserveConfirmPage() {
                             </button>
                         </div>
                     </section>
+
 
                     {/* Customer Form */}
                     <form onSubmit={handleSubmit}>
